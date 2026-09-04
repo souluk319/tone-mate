@@ -19,6 +19,7 @@ ToneMate는 노래 초보자가 음정을 못 맞히는 원인을 듣기, 목표
 5. [현재 설계](DESIGN.md) — 구현 상태와 일치해야 하는 아키텍처 정본
 6. [개발·이슈 운영 계획](docs/plans/development-workflow.md) — 제품 구현, #1470 실행과 결함 수정의 분리 절차
 7. [#1470 착수 계획](docs/plans/issue-1470-kickoff-plan.md) — 이슈 본문 필수 검증을 포맷별 제품 산출물과 실행 단계에 매핑
+8. [다중 저장소 작업공간 계약](docs/plans/multi-repo-workspace.md) — 이슈 번호 worktree, branch, workspace와 교차 저장소 수정 경계
 
 문서의 역할과 우선순위는 [명세 인덱스](docs/specs/README.md)를 따른다. 조사 자료는 [연구 인덱스](docs/research/README.md)에 분리되어 있으며 정본 요구사항을 직접 변경하지 않는다.
 

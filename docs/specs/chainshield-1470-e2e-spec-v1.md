@@ -1,6 +1,6 @@
 # ToneMate ChainShield #1470 실사용 E2E 명세 v1
 
-- 문서 버전: 1.4
+- 문서 버전: 1.5
 - 작성일: 2026-09-02
 - ToneMate 정본 편입일: 2026-09-04
 - 상태: 실행 전 명세, 제품 기준선 commit·ChainShield 배포 확인 후 실행 가능
@@ -130,6 +130,15 @@ tonemate/
 - `source_dirty` 가 `true`이면 게시·E2E를 시작하지 않는다.
 - 산출물 생성 후 소스를 변경하면 새 commit·새 run으로 시작한다.
 - 다른 포맷의 같은 제품 버전은 같은 `source_commit`을 가리켜야 한다.
+
+### 로컬 multi-repo workspace와 결함 작업장
+
+- ToneMate와 ChainShield는 별도 Git 저장소·branch·commit·PR을 유지하고 로컬 multi-root workspace로만 함께 연다.
+- 각 저장소의 기준 checkout은 비교·fetch 기준으로 보존하며 실제 변경은 이슈 번호를 확보한 뒤 `.worktrees/issue_<번호>`에서 수행한다.
+- #1470은 실행·증적 장부이므로 `issue_1470` worktree와 `fix/1470-*` branch를 만들지 않는다.
+- #1470에서 ChainShield 결함이 확인되면 기존 이슈를 검색하고 별도 결함 이슈를 발행한 뒤 그 번호로 ChainShield worktree를 만든다.
+- 동시에 열린 root가 여러 개여도 한 agent는 한 worktree만 쓰며 cwd·Git top-level·branch를 작업 전 확인한다.
+- 자세한 생성·추가·검증·정리 절차는 [다중 저장소 작업공간 계약](../plans/multi-repo-workspace.md)을 따른다.
 
 ## 5. 실행 환경과 전제조건
 

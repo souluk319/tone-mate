@@ -22,7 +22,8 @@
 5. `docs/specs/chainshield-1470-e2e-spec-v1.md`: 고정 commit을 소비하는 공급망 검증 계약
 6. `docs/plans/development-workflow.md`: 제품 개발, #1470 실행과 결함 수정의 이슈 운영 절차
 7. `docs/plans/issue-1470-kickoff-plan.md`: live 이슈 체크리스트를 포맷별 제품 산출물·run·증적에 매핑한 착수 순서
-8. `docs/adr/`: 채택하거나 기각한 주요 설계 선택
+8. `docs/plans/multi-repo-workspace.md`: ToneMate·ChainShield issue worktree와 multi-root workspace 운영 계약
+9. `docs/adr/`: 채택하거나 기각한 주요 설계 선택
 
 연구 문서는 결정 근거이며 정본 요구사항이 아니다. 문서끼리 충돌하면 조용히 한쪽을 선택하지 말고 역할에 따라 분류한 뒤 관련 정본과 추적성 문서를 함께 갱신한다.
 
@@ -86,6 +87,9 @@ callback은 사전 할당된 buffer에 bounded write만 수행한다. 분석과 
 
 - 사용자가 만든 변경을 보존하고 관련 없는 파일을 수정하지 않는다.
 - 파괴적인 Git 명령과 광범위한 삭제를 사용하지 않는다.
+- 기준 checkout은 비교·fetch 기준으로 보존하고 실제 변경은 이슈 번호를 확보한 뒤 `.worktrees/issue_<번호>`에서 수행한다.
+- `ChainShield#1470`은 실행·증적 이슈이므로 해당 번호의 branch·worktree를 만들지 않는다. 확인된 제품 결함의 별도 이슈 번호를 사용한다.
+- multi-root workspace에 여러 저장소가 열려 있어도 한 agent는 한 worktree만 쓰며 시작 전에 cwd·Git top-level·branch를 확인한다.
 - 생성 산출물, cache, secret과 개인 음성은 커밋하지 않는다.
 - 상태를 보고할 때 문서 완료, 코드 완료, 제품 검증과 #1470 증적 완료를 구분한다.
 

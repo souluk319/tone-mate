@@ -1,11 +1,12 @@
 # ChainShield #1470 착수 계획
 
-- 버전: 1.0
+- 버전: 1.1
 - 기준일: 2026-09-04
 - 기준 이슈: [ChainShield #1470](https://github.com/cywell-rnd-team/chainshield/issues/1470)
 - 확인한 이슈 갱신 시각: 2026-09-04T00:38:50Z
 - 담당 포맷: Conan, Swift, CocoaPods
 - 상태: Phase 0 착수 가능, 포맷 실행 전
+- 작업장 계약: [ToneMate·ChainShield 다중 저장소 작업공간](./multi-repo-workspace.md)
 
 ## 1. 결론
 

@@ -1,11 +1,12 @@
 # ToneMate 개발·이슈 운영 계획
 
-- 버전: 1.0
+- 버전: 1.1
 - 기준일: 2026-09-04
 - 상태: 실행 기준선
 - ChainShield 실행 이슈: [#1470](https://github.com/cywell-rnd-team/chainshield/issues/1470)
 - 현재 #1470 형식: Conan, Swift, CocoaPods
 - 포맷별 상세 착수 순서: [#1470 착수 계획](./issue-1470-kickoff-plan.md)
+- 다중 저장소 작업 규칙: [ToneMate·ChainShield 작업공간 계약](./multi-repo-workspace.md)
 
 ## 1. 운영 원칙
 
@@ -198,3 +199,11 @@ Conan부터 시작하는 이유는 공유 피치 코어가 실제 제품 핵심�
 5. Conan package가 일반 consumer에서 PASS하기 전에는 #1470 실행 댓글을 만들지 않는다.
 
 이 방식이면 제품 개발을 멈추지 않으면서도 ChainShield 문제만 정확한 시점에 별도 이슈로 분리할 수 있다.
+
+## 9. 이슈 번호와 작업장
+
+- 이슈를 먼저 발행해 번호를 확보하고 해당 저장소의 `.worktrees/issue_<번호>`를 만든다.
+- ToneMate와 ChainShield의 같은 숫자 이슈는 서로 다른 저장소 경로와 `ToneMate#번호`·`ChainShield#번호` 표기로 구분한다.
+- #1470은 실행 장부이므로 `issue_1470` 작업장을 만들지 않는다.
+- ChainShield 결함은 별도 이슈 번호의 `fix/<번호>-<범위>` branch와 worktree에서만 수정한다.
+- 생성·추가·작업·검증·정리의 전체 절차는 [다중 저장소 작업공간 계약](./multi-repo-workspace.md)을 따른다.

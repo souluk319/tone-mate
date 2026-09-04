@@ -34,6 +34,8 @@
 ## Execution boundary
 
 - 이 하네스는 ChainShield 운영 배포, DB migration, 서비스 재구성을 수행하지 않는다.
+- `ChainShield#1470` 번호로 code branch·worktree를 만들지 않는다. 확인된 ChainShield 결함은 별도 이슈 번호를 확보한 뒤 ChainShield 저장소의 `.worktrees/issue_<번호>`에서 수정한다.
+- multi-root workspace는 탐색 편의일 뿐이다. 한 agent는 한 worktree만 쓰며 ToneMate와 ChainShield 변경을 하나의 commit·PR로 취급하지 않는다.
 - Hosted, Proxy cold·warm·purge·rewarm, Group, Scan·Policy, 재스캔, 예외와 감사 결과를 별도 단계로 기록한다.
 - 제품 PASS와 ChainShield PASS를 독립적으로 판정한다.
 - FAIL은 기존 이슈의 endpoint, 상태 전이, source path와 근본원인을 먼저 검색한다.
