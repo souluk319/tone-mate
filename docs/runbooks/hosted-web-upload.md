@@ -27,10 +27,16 @@ Hosted의 `업로드` 탭에서 Conan 캐시 아카이브를 선택한다. 패�
 - 파일: `tonemate.apple-audio-0.1.0-alpha.1.zip`
 - 패키지: `tonemate.apple-audio`
 - 버전: `0.1.0-alpha.1`
+- ZIP 구조: 최상위 디렉터리는 파일명과 동일한
+  `tonemate.apple-audio-0.1.0-alpha.1/`이며, 그 바로 아래에
+  `Package.swift`가 있어야 한다. 이 구조가 ChainShield 웹 업로드의
+  Swift 좌표 자동 인식 계약이다.
 - 아티팩트 경로: 비워 둔다.
 
-Hosted의 `업로드` 탭에서 ZIP을 선택하고 패키지와 버전을 입력한다. ZIP에는
-단일 package root 바로 아래의 `Package.swift`와 실제 Swift source가 포함된다.
+Hosted의 `업로드` 탭에서 ZIP을 선택한다. UI가 패키지와 버전을 자동으로
+채운 것을 확인한 뒤 업로드하며, 자동 인식되지 않은 파일은 수동 좌표로
+우회하지 않는다. ZIP에는 단일 package root 바로 아래의 `Package.swift`와
+실제 Swift source가 포함된다.
 
 ## CocoaPods
 

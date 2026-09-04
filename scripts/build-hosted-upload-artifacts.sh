@@ -22,17 +22,27 @@ mkdir -p "$output_dir"
 source_commit=$(git -C "$repo_root" rev-parse HEAD)
 created_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
-swift_stage="$scratch_dir/apple_audio"
+swift_archive_base="tonemate.apple-audio-$version"
+swift_stage="$scratch_dir/$swift_archive_base"
 mkdir -p "$swift_stage"
 cp "$repo_root/packages/apple_audio/Package.swift" "$swift_stage/"
 cp "$repo_root/packages/apple_audio/LICENSE" "$swift_stage/"
 cp -R "$repo_root/packages/apple_audio/Sources" "$swift_stage/"
 cp -R "$repo_root/packages/apple_audio/Tests" "$swift_stage/"
-swift_output="$scratch_dir/tonemate.apple-audio-$version.zip"
+swift_output="$scratch_dir/$swift_archive_base.zip"
 (
   cd "$swift_stage"
   swift package archive-source --output "$swift_output"
 )
+
+swift_entries=$(unzip -Z1 "$swift_output")
+if ! awk -v prefix="$swift_archive_base/" \
+  'index($0, prefix) != 1 { invalid = 1 } END { exit invalid }' <<<"$swift_entries" \
+  || ! grep -Fxq "$swift_archive_base/Package.swift" <<<"$swift_entries"; then
+  printf '%s\n' \
+    "Swift registry archive must contain only $swift_archive_base/ and its root Package.swift." >&2
+  exit 1
+fi
 
 cocoapods_stage="$scratch_dir/ToneMatePitch-$version"
 mkdir -p "$cocoapods_stage/Sources/ToneMateAppleAudio"
