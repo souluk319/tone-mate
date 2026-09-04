@@ -1,0 +1,39 @@
+.DS_Store
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Flutter and Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+coverage/
+
+# Apple
+DerivedData/
+Pods/
+.symlinks/
+*.xcuserstate
+xcuserdata/
+
+# Android and Gradle
+.gradle/
+local.properties
+captures/
+.cxx/
+
+# C/C++ and Conan
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+conan_cache/
+
+# ToneMate QA local runs
+qa/chainshield/.runs/
+qa/chainshield/.secrets/
+qa/chainshield/.cache/
