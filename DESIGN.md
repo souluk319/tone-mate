@@ -2,7 +2,7 @@
 
 - 상태: Specification baseline
 - 기준일: 2026-09-04
-- 구현 상태: 제품 코드 없음
+- 구현 상태: 패키지 기반 계약 구현 시작
 - 제품 작업명: ToneMate
 - 브랜드 문구 후보: `Pitch maketh tone.`
 
@@ -16,14 +16,17 @@ MVP는 계정과 서버 없이 첫 진단과 일일 훈련을 완료할 수 있�
 
 ## 2. Current repository state
 
-현재 저장소에는 정본 명세, 연구 근거, 작업 규칙과 이 설계 문서만 있다. 아래 앱·패키지 모듈은 아직 생성되지 않은 `Planned` 구조다.
+현재 저장소에는 정본 명세와 함께 `pitch_core`의 C ABI·음정 단위 변환 기반,
+`apple_audio`의 callback 외부 구성·타이밍 계약, 같은 Swift source를 배포하는
+CocoaPods prerelease 구성이 구현되어 있다. 실제 F0 추정, PCM capture와 앱은
+아직 `Planned`다.
 
 ```text
 apps/tonemate/                 Flutter UI·세션·로컬 데이터
-packages/pitch_core/           C++20 DSP·C ABI·Conan recipe
-packages/apple_audio/          AVAudioEngine 연결 Swift package
+packages/pitch_core/           C++20 DSP 기반·C ABI·Conan recipe (부분 구현)
+packages/apple_audio/          iOS 오디오 계약 Swift package (부분 구현)
 packages/tonemate_pitch/       앱 내부 Flutter plugin·Dart package
-distribution/cocoapods/        동일 iOS 소스의 CocoaPods 배포
+distribution/cocoapods/        동일 iOS 소스의 CocoaPods 배포 (alpha 구성)
 bench/                         결정론적 corpus·benchmark
 qa/chainshield/                #1470 실행·증적 하네스
 ```

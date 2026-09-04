@@ -1,0 +1,26 @@
+{
+  "name": "ToneMatePitch",
+  "version": "0.1.0-alpha.1",
+  "summary": "Kugnus Lab's Apple audio capture contracts for ToneMate.",
+  "description": "Validated audio capture configuration and frame timing contracts shared by ToneMate's SwiftPM and CocoaPods iOS build lanes.",
+  "homepage": "https://github.com/souluk319/tone-mate",
+  "license": {
+    "type": "Proprietary",
+    "text": "Copyright (c) 2026 Kugnus Lab. All rights reserved."
+  },
+  "authors": {
+    "Kugnus Lab": "https://github.com/souluk319"
+  },
+  "source": {
+    "http": "https://chainshield.cywell.co.kr/cocoapods/tm1470-cocoapods-hosted/pods/hosted/ToneMatePitch/0.1.0-alpha.1/ToneMatePitch-0.1.0-alpha.1.zip"
+  },
+  "platforms": {
+    "ios": "15.0"
+  },
+  "swift_versions": [
+    "6.0"
+  ],
+  "module_name": "ToneMatePitch",
+  "source_files": "Sources/ToneMateAppleAudio/**/*.swift",
+  "requires_arc": true
+}
