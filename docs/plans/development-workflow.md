@@ -5,6 +5,7 @@
 - 상태: 실행 기준선
 - ChainShield 실행 이슈: [#1470](https://github.com/cywell-rnd-team/chainshield/issues/1470)
 - 현재 #1470 형식: Conan, Swift, CocoaPods
+- 포맷별 상세 착수 순서: [#1470 착수 계획](./issue-1470-kickoff-plan.md)
 
 ## 1. 운영 원칙
 
@@ -137,26 +138,27 @@ ChainShield를 사용하지 않는 정상 제품 경로를 먼저 검증한다.
 | 단계 | 제품 산출물 | 제품 게이트 | #1470 연결 |
 |---:|---|---|---|
 | 0 | 저장소 remote, toolchain manifest, CI, run schema | clean hello builds | 아직 실행하지 않음 |
-| 1 | 합성 corpus·offline benchmark·C++ `pitch_core` | 결정성·F0 정확도·성능 기준선 | Conan package가 실제 build 가능하면 첫 run |
-| 2 | Flutter 셸·`tonemate_pitch`·Android/iOS PCM bridge | 단음 입력→snapshot→화면 vertical slice | Pub 검증 없음; Conan consumer build 보강 |
+| 1 | 합성 corpus·C++ `pitch_core`·Flutter 최소 vertical slice | 결정성·F0 정확도·Android/iOS 일반 build | 아직 실행하지 않음 |
+| 2 | 실제 `pitch_core` Conan package와 Flutter native link | 일반 Conan consumer·실제 app build | Conan 첫 run |
 | 3 | `apple_audio` Swift package와 iOS SwiftPM lane | route·interruption·실기기 build | Swift 첫 run |
 | 4 | 같은 iOS 소스의 CocoaPods 호환 배포 | pod lint·clean workspace build | CocoaPods 첫 run |
 | 5 | 듣기·단음 재현·C 메이저 5분 루틴 | AC-01–07과 기기 기술 게이트 | 세 포맷을 같은 RC commit으로 통합 run |
 
-Conan부터 시작하는 이유는 공유 피치 코어가 실제 제품 핵심이면서 Android·iOS 양쪽 consumer를 만들기 때문이다. Swift와 CocoaPods는 iOS 오디오 경계가 제품에서 실제로 사용 가능해진 뒤 진행한다.
+Conan부터 시작하는 이유는 공유 피치 코어가 실제 제품 핵심이면서 Android·iOS 양쪽 consumer를 만들기 때문이다. 다만 CMake fixture만으로 #1470을 PASS 처리하지 않고 Flutter 앱이 실제 package를 link한 뒤 첫 run을 연다. Swift와 CocoaPods는 iOS 오디오 경계가 제품에서 실제로 사용 가능해진 뒤 진행한다.
 
 ## 6. 첫 ToneMate 이슈 백로그
 
 원격 저장소를 만든 뒤 처음에는 아래 이슈만 생성한다. 뒤 단계는 앞 단계 결과가 나온 뒤 구체화한다.
 
-1. `Phase 0: 모바일·네이티브 toolchain과 재현 가능한 hello build 고정`
-2. `DSP-001: 합성 단음 corpus와 F0 benchmark 계약 작성`
-3. `DSP-002: pitch_core YIN 기준선과 신뢰도 관측 구현`
-4. `PKG-001: 실제 pitch_core Conan package와 격리 CMake consumer 구현`
-5. `APP-001: Flutter 셸에서 단음 trial 상태 전이 구현`
-6. `AUDIO-001: iOS·Android PCM 입력을 bounded snapshot으로 연결`
+1. `BOOT-001: 모바일·네이티브 toolchain과 재현 가능한 hello build 고정`
+2. `DSP-001: 합성 단음 corpus와 pitch_core F0 기준선 구현`
+3. `APP-001: Flutter 목표음→PCM 분석→pitch 표시 vertical slice 구현`
+4. `PKG-001: 실제 pitch_core Conan package와 앱 consumer 구현`
+5. `IOS-001: apple_audio SwiftPM package와 iOS app lane 구현`
+6. `IOS-002: ToneMatePitch CocoaPods 호환 lane 구현`
+7. `QA-001: #1470 포맷별 run·evidence 자동화`
 
-처음부터 전체 MVP 이슈를 수십 개 만들지 않는다. 1–3번을 먼저 발행하고 Phase 0 결과를 본 뒤 4–6번의 수용 기준과 toolchain 값을 확정한다.
+처음부터 전체 MVP 이슈를 수십 개 만들지 않는다. 1–3번을 먼저 발행하고 Phase 0 결과를 본 뒤 4–7번의 수용 기준과 toolchain 값을 확정한다.
 
 ## 7. 이슈 본문 최소 형식
 

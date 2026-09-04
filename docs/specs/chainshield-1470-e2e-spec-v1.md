@@ -1,6 +1,6 @@
 # ToneMate ChainShield #1470 실사용 E2E 명세 v1
 
-- 문서 버전: 1.3
+- 문서 버전: 1.4
 - 작성일: 2026-09-02
 - ToneMate 정본 편입일: 2026-09-04
 - 상태: 실행 전 명세, 제품 기준선 commit·ChainShield 배포 확인 후 실행 가능
@@ -9,6 +9,7 @@
 - 제품 기준: [제품 명세 v1](./product-spec-v1.md)
 - 기술 기준: [기술검증 계획 v1](./technical-validation-plan-v1.md)
 - 연결 기준: [제품·QA 추적성 명세](./product-qa-traceability-v1.md)
+- 실행 순서: [#1470 착수 계획](../plans/issue-1470-kickoff-plan.md)
 
 이 문서는 앱 개발 명세가 아니라, 실제 앱 개발 과정을 ChainShield Native·Mobile 실사용 E2E로 어떻게 연결하고 증명할지 정의한다. 2026-09-04 확인한 #1470 본문의 실행 범위는 `Conan, Swift, CocoaPods`다.
 
@@ -547,7 +548,7 @@ FAIL은 다음 순서로 분류한다.
 2. 루트·QA `AGENTS.md`, `DESIGN.md`, 승인 명세·초기 ADR을 작성하고 상호 연결한다.
 3. 툴체인·좌표·버전·lockfile·package manifest를 고정한다.
 4. 일반 원격을 사용한 제품 기준선과 격리 consumer를 완성한다.
-5. `pitch_core`가 실제 제품에서 build 가능한 첫 clean commit부터 Conan 단독 run을 검증한다.
+5. `pitch_core`의 일반 Conan consumer와 Flutter 앱 native link가 모두 PASS한 첫 clean commit부터 Conan 단독 run을 검증한다.
 6. `apple_audio`와 CocoaPods 호환 lane이 실제 build 가능해지는 순서대로 Swift·CocoaPods 단독 run을 검증한다.
 7. Android, iOS SwiftPM, iOS CocoaPods 세 clean lane을 적용 가능한 native 포맷 Group endpoint로 build하고 같은 product commit에 결속한다.
 8. #1464 일정에 맞춰 동시 native 요청 run을 수행한다.

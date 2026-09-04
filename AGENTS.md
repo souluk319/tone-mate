@@ -21,7 +21,8 @@
 4. `docs/specs/product-qa-traceability-v1.md`: 요구사항과 구현·시험·증적의 연결
 5. `docs/specs/chainshield-1470-e2e-spec-v1.md`: 고정 commit을 소비하는 공급망 검증 계약
 6. `docs/plans/development-workflow.md`: 제품 개발, #1470 실행과 결함 수정의 이슈 운영 절차
-7. `docs/adr/`: 채택하거나 기각한 주요 설계 선택
+7. `docs/plans/issue-1470-kickoff-plan.md`: live 이슈 체크리스트를 포맷별 제품 산출물·run·증적에 매핑한 착수 순서
+8. `docs/adr/`: 채택하거나 기각한 주요 설계 선택
 
 연구 문서는 결정 근거이며 정본 요구사항이 아니다. 문서끼리 충돌하면 조용히 한쪽을 선택하지 말고 역할에 따라 분류한 뒤 관련 정본과 추적성 문서를 함께 갱신한다.
 
