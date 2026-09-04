@@ -1,6 +1,6 @@
 # ToneMate 모바일 앱 기술검증 계획 v1
 
-- 문서 버전: 1.3
+- 문서 버전: 1.4
 - 작성일: 2026-09-02
 - ToneMate 정본 편입일: 2026-09-04
 - 상태: 실행 계획
@@ -68,7 +68,7 @@
 - iOS·Android에서 같은 원시 지표 계약을 사용한다.
 - `pitch_core`는 제품의 정식 Conan 2 내부 패키지로 배포한다. 외부 C/C++ 의존성 사용 여부는 별도로 결정한다.
 - SwiftPM을 iOS 주 통합으로, CocoaPods를 같은 코드의 지원 대상 호환 통합으로 사용한다.
-- `tonemate_pitch`는 실제 앱이 소비하는 정식 Pub package다.
+- `tonemate_pitch`는 실제 앱이 workspace에서 소비하는 Flutter plugin이다. Pub registry 검증은 #1470 범위가 아니다.
 
 ### 검증으로 결정
 
@@ -146,7 +146,7 @@ tonemate/
     Package.swift              AVAudioEngine 연결 Swift package
     Sources/ Tests/
   packages/tonemate_pitch/
-    pubspec.yaml               실제 Pub/Flutter plugin manifest
+    pubspec.yaml               실제 Flutter plugin manifest
     lib/ ios/ android/ test/
   distribution/cocoapods/
     ToneMatePitch.podspec.json
@@ -183,7 +183,7 @@ tonemate/
 - Flutter→plugin→platform audio→`pitch_core` 의 일방향 의존성과 허용된 예외
 - audio callback에서 할당·lock·I/O·로깅·Dart channel 전송을 하지 않는 실시간 안전 규칙
 - 원음 기본 비저장·비전송, 민감 음성·credential·개인정보 Git 저장 금지
-- Conan·SwiftPM·CocoaPods·Pub 정식 좌표·lockfile·license·digest 유지 규칙
+- Conan·SwiftPM·CocoaPods 정식 좌표와 제품 Dart/Flutter lockfile·license·digest 유지 규칙
 - Android, iOS SwiftPM, iOS CocoaPods가 별도 build lane이며 SwiftPM·CocoaPods를 한 target에 중복 link하지 않는 규칙
 - 포맷 테스트를 위한 불필요한 제품 의존성 추가 금지
 - 변경 범위의 focused test·build·물리 기기 게이트와 전체 suite 실행 권한 구분
@@ -240,7 +240,7 @@ tonemate/
 - C++ standard와 compiler flags
 - 모델 파일·음원·corpus manifest digest
 - 알고리즘·threshold·scoring version
-- 모든 Pub, SwiftPM, Gradle, Conan lockfile
+- 모든 Dart/Flutter, SwiftPM, Gradle, Conan lockfile
 - CocoaPods 호환 경로의 `Podfile.lock`과 제품 archive SHA-256
 - 포맷별 정식 좌표·산출물 digest·소스 commit을 결속한 `package-manifest.json`
 
@@ -532,7 +532,7 @@ t4 frame presented estimate
 - iOS·Android physical-device hello audio build
 - dependency lock과 라이선스 inventory
 - 검증 결과 스키마
-- Conan·Swift·CocoaPods·Pub 정식 패키지 좌표와 공통 `package-manifest.json`
+- Conan·Swift·CocoaPods 정식 패키지 좌표와 공통 `package-manifest.json`; Flutter workspace package manifest
 - workspace·path 우회가 없는 격리 consumer 생성·검증 스크립트
 
 종료 조건: TV-021–024 PASS, 정식 좌표 증적 manifest 생성, 격리 consumer의 local bypass 0건, `AGENTS.md`·`DESIGN.md`·초기 ADR·승인 명세의 상호 링크·구현 일치 리뷰 완료.
@@ -729,7 +729,7 @@ t4 frame presented estimate
 ### 병행 원칙
 
 - 제품 commit과 패키지 source commit은 같아야 한다.
-- Conan·Swift·CocoaPods·Pub 배포물은 같은 소스를 포맷별로 패키징하며 테스트용 구현을 따로 만들지 않는다.
+- Conan·Swift·CocoaPods 배포물은 같은 소스를 포맷별로 패키징하며 테스트용 구현을 따로 만들지 않는다.
 - 일반 개발의 workspace·path 해석은 허용하되 #1470 증적 consumer는 모노레포 밖으로 격리한다.
 - 정상 경로는 실제 제품 package·app build로 검증한다. 손상 archive, 정책 차단과 예외 상태만 `qa/chainshield/fixtures/negative` 안의 격리 fixture를 사용한다.
 - Proxy는 고정 commit에 실제로 있는 외부 의존성만 사용한다. 해당 포맷 외부 좌표가 없으면 패키지를 추가하지 않고 `N/A — 실제 외부 의존성 없음`을 기록한다.
@@ -742,7 +742,8 @@ t4 frame presented estimate
 | Conan | `pitch_core` recipe·platform binary revision | `--build=never` 격리 install 후 CMake smoke·Flutter native build |
 | Swift | `apple_audio` source package | clean SwiftPM resolve/build 후 iOS app build |
 | CocoaPods | `ToneMatePitch` 호환 source archive·podspec | clean `pod install` 후 `.xcworkspace` app build |
-| Pub | `tonemate_pitch` Flutter plugin | clean `PUB_CACHE` + Group endpoint의 `flutter pub get` 후 Android·iOS build |
+
+Flutter app과 `tonemate_pitch`는 제품 기준선과 세 native package consumer build에 계속 사용하지만 Pub 저장소 자체는 #1470에서 검증하지 않는다.
 
 실행 절차·정책·cache·UI·증적·판정 계약은 별도 [ChainShield #1470 E2E 명세](./chainshield-1470-e2e-spec-v1.md)를 따른다.
 

@@ -1,6 +1,6 @@
 # ToneMate ChainShield #1470 실사용 E2E 명세 v1
 
-- 문서 버전: 1.2
+- 문서 버전: 1.3
 - 작성일: 2026-09-02
 - ToneMate 정본 편입일: 2026-09-04
 - 상태: 실행 전 명세, 제품 기준선 commit·ChainShield 배포 확인 후 실행 가능
@@ -10,14 +10,14 @@
 - 기술 기준: [기술검증 계획 v1](./technical-validation-plan-v1.md)
 - 연결 기준: [제품·QA 추적성 명세](./product-qa-traceability-v1.md)
 
-이 문서는 앱 개발 명세가 아니라, 실제 앱 개발 과정을 ChainShield Native·Mobile 실사용 E2E로 어떻게 연결하고 증명할지 정의한다. 현재 #1470 본문의 실행 범위는 `Conan, Swift, CocoaPods, Pub`이며, 제목에도 Pub을 추가하는 것을 권장한다.
+이 문서는 앱 개발 명세가 아니라, 실제 앱 개발 과정을 ChainShield Native·Mobile 실사용 E2E로 어떻게 연결하고 증명할지 정의한다. 2026-09-04 확인한 #1470 본문의 실행 범위는 `Conan, Swift, CocoaPods`다.
 
 ## 0. 핵심 실행 결정
 
 1. 실제 모바일 제품은 별도 `tonemate` 모노레포에서 개발한다.
 2. #1470은 코드 개발 이슈가 아니라 고정 commit을 소비하는 실행·증적 이슈로 유지한다.
-3. Conan·Swift·CocoaPods·Pub은 모두 실제 제품 모듈의 배포·소비 경로로 사용한다.
-4. Pub은 `tonemate_pitch` Flutter plugin을 앱이 소비하는 정식 경로이므로 포함한다.
+3. Conan·Swift·CocoaPods는 모두 실제 제품 모듈의 배포·소비 경로로 사용한다.
+4. Flutter/Dart의 Pub 도구와 `tonemate_pitch` workspace package는 제품 구현에 사용하지만 Pub Hosted·Proxy·Group은 #1470에서 검증하지 않는다.
 5. 정상 경로는 실제 제품 archive와 실제 앱 build로 검증한다.
 6. 손상·좌표 불일치·정책 차단·예외 상태는 제품 dependency graph와 분리된 제어 fixture로만 검증한다.
 7. 한 실행의 제품 판정과 ChainShield 판정은 별도다. 하나의 PASS로 다른 하나를 대체하지 않는다.
@@ -38,7 +38,7 @@
 
 ### 포함
 
-- Conan 2, Swift Package Registry, CocoaPods CDN, Hosted Pub protocol v2
+- Conan 2, Swift Package Registry, CocoaPods CDN
 - Hosted·Proxy·Group, Private 인증, native install/build
 - Proxy cold·warm·exact package purge·재수집·재warm
 - Group member 우선순위·selected member·provenance·fail-closed
@@ -53,6 +53,7 @@
 - 제품에 필요하지 않은 외부 라이브러리 추가
 - 실제 악성코드 실행. 위험 검증은 비실행성·결정적 fixture로 한정한다.
 - #1470에서 발견한 결함의 즉시 수정. 수정은 근본원인별 분리 이슈·분리 PR로 진행한다.
+- Pub Hosted·Proxy·Group과 Pub 저장소 형식의 정책·캐시·감사 검증. Flutter/Dart build 도구 사용 자체는 제품 범위에 유지한다.
 
 ## 3. 권위 기준과 버전
 
@@ -61,7 +62,6 @@
 | Conan | Conan 2 revisions model | Conan CLI 2.31.1 baseline | 실제 버전·OS·arch를 run에 기록 |
 | Swift | Swift Package Registry API v1 / SE-0292 | SwiftPM 6.1 baseline | registry·cache를 격리하고 `resolve/build` |
 | CocoaPods | Specs/CDN model | CocoaPods 1.16.2 | 실제 macOS·Xcode project에서 `pod install` |
-| Pub | Hosted Pub Repository protocol v2 | Dart SDK 3.13.0 baseline | clean `PUB_CACHE`에서 `pub get` + Flutter build |
 
 위 버전은 ChainShield 저장소 규약의 검증 baseline이다. 제품이 더 새로운 공식 client를 고정하면 그 버전을 우선해 실행하되, baseline과의 차이를 명시한다. 실행 시점의 ChainShield 소스 SHA, 배포 SHA·버전·DB schema를 반드시 다시 확인한다.
 
@@ -74,7 +74,7 @@ tonemate/
   apps/tonemate/                    실제 Flutter app consumer
   packages/pitch_core/              C++20 core + Conan recipe
   packages/apple_audio/             Swift package
-  packages/tonemate_pitch/          Flutter plugin + Pub package
+  packages/tonemate_pitch/          앱 내부 Flutter plugin + Dart package
   distribution/cocoapods/           CocoaPods compatibility artifact
   bench/                             제품 기술 검증
   qa/chainshield/
@@ -93,7 +93,6 @@ tonemate/
 | Conan | `packages/pitch_core` | `tonemate-pitch-core/0.1.0@tonemate/stable` | CMake smoke, Flutter iOS·Android native link |
 | Swift | `packages/apple_audio` | `tonemate.apple-audio@0.1.0` | Swift consumer, Flutter iOS SwiftPM lane |
 | CocoaPods | `distribution/cocoapods` + 공유 iOS source | `ToneMatePitch@0.1.0` | Flutter iOS CocoaPods compatibility lane |
-| Pub | `packages/tonemate_pitch` | `tonemate_pitch@0.1.0` | `apps/tonemate` Android·iOS build |
 
 좌표는 첫 게시 전 상표·namespace·클라이언트 제약을 검토해 확정한다. 확정 후 명세 변경 없이 임의 좌표로 대체하지 않는다.
 
@@ -101,11 +100,11 @@ tonemate/
 
 | lane | 필수 패키지 경로 | 산출물 |
 |---|---|---|
-| Android | Pub Group + Conan Group | release APK/AAB·물리 기기 smoke |
-| iOS 주 경로 | Pub Group + Swift Group + 적용 가능한 Conan Group | no-sign compile·device archive·물리 기기 smoke |
-| iOS 호환 경로 | Pub Group + CocoaPods Group + 적용 가능한 Conan Group | `.xcworkspace` compile·호환 스모크 |
+| Android | 적용 가능한 Conan Group | release APK/AAB·물리 기기 smoke |
+| iOS 주 경로 | Swift Group + 적용 가능한 Conan Group | no-sign compile·device archive·물리 기기 smoke |
+| iOS 호환 경로 | CocoaPods Group + 적용 가능한 Conan Group | `.xcworkspace` compile·호환 스모크 |
 
-여기서 `Group`은 포맷별 단일 endpoint를 뜻한다. 여러 생태계를 하나의 범용 endpoint로 합치지 않는다. SwiftPM과 CocoaPods lane은 같은 iOS target에 동시 링크하지 않고, 같은 product commit·기능 소스를 서로 다른 clean build 구성으로 검증한다. `tonemate_pitch` plugin의 iOS 연결은 각 lane에서 `apple_audio` 또는 `ToneMatePitch` 중 하나만 소비해 중복 symbol·이중 패키징을 방지한다.
+여기서 `Group`은 포맷별 단일 endpoint를 뜻한다. 여러 생태계를 하나의 범용 endpoint로 합치지 않는다. SwiftPM과 CocoaPods lane은 같은 iOS target에 동시 링크하지 않고, 같은 product commit·기능 소스를 서로 다른 clean build 구성으로 검증한다. `tonemate_pitch`는 같은 product commit의 workspace package로 소비하되 Pub ChainShield 증적으로 계산하지 않는다. plugin의 iOS 연결은 각 lane에서 `apple_audio` 또는 `ToneMatePitch` 중 하나만 소비해 중복 symbol·이중 패키징을 방지한다.
 
 ### 소스–산출물 결속
 
@@ -116,10 +115,10 @@ tonemate/
   "source_commit": "<FULL_PRODUCT_SHA>",
   "source_dirty": false,
   "product_version": "0.1.0",
-  "format": "pub",
-  "coordinate": "tonemate_pitch",
+  "format": "conan",
+  "coordinate": "tonemate-pitch-core/0.1.0@tonemate/stable",
   "version": "0.1.0",
-  "artifact_file": "tonemate_pitch-0.1.0.tar.gz",
+  "artifact_file": "<ARTIFACT_FILE>",
   "artifact_sha256": "<SHA256>",
   "toolchain": {},
   "lockfiles": [],
@@ -165,7 +164,6 @@ tonemate/
 | Conan | `tonemate-conan-h-1470` | `tonemate-conan-p-1470` | `tonemate-conan-g-1470` |
 | Swift | `tonemate-swift-h-1470` | `tonemate-swift-p-1470` | `tonemate-swift-g-1470` |
 | CocoaPods | `tonemate-pods-h-1470` | `tonemate-pods-p-1470` | `tonemate-pods-g-1470` |
-| Pub | `tonemate-pub-h-1470` | `tonemate-pub-p-1470` | `tonemate-pub-g-1470` |
 
 - key는 1–64자 영문 소문자·숫자·`.`·`_`·`-`만 사용하고 첫·끝 문자는 영문 소문자 또는 숫자로 한다.
 - 정상 실행은 Private 저장소를 기준으로 하고 익명·잘못된 credential 거부를 따로 확인한다.
@@ -320,43 +318,7 @@ Package.swift·plugin·macro를 ChainShield 서버에서 실행하지 않는 것
 
 CocoaPods는 단순 QA 포맷이 아니라 지원하는 iOS 호환 경로다. 단, 실제 pinned Flutter·Xcode 조합에서 이 경로를 지원하지 않기로 제품 결정을 바꾸면, CocoaPods를 테스트용으로 존치하지 않고 #1470에 영향·사유를 기록한다.
 
-## 12. Pub 실행 명세
-
-### 제품 산출물
-
-- package: `packages/tonemate_pitch`
-- 좌표: `tonemate_pitch@<version>`
-- 내용: Dart API, Flutter plugin metadata, iOS·Android native binding
-- 소비자: `apps/tonemate`
-
-### 로컬 우회 금지
-
-모노레포 개발 중 Flutter workspace가 `tonemate_pitch`를 로컬로 해석할 수는 있다. 그러나 #1470 증적은 다음 모두를 만족해야 한다.
-
-- 앱 `pubspec.yaml`이 `tonemate_pitch` 버전을 선언한다.
-- 앱 consumer를 모노레포 밖 임시 디렉터리로 export한다.
-- `dependency_overrides`, `path`, `git`, workspace package shadowing이 없다.
-- `PUB_HOSTED_URL`에는 ChainShield Group endpoint만 넣는다.
-- 새 `PUB_CACHE`와 새 Dart config home을 사용한다.
-- `.dart_tool/package_config.json`과 lockfile의 source·version을 확인한다.
-
-### 필수 시나리오
-
-| ID | 시나리오 | 통과 조건 |
-|---|---|---|
-| PB-H-01 | 고정 commit package를 `dart pub publish` 또는 정의된 UI cross-surface 경로 Hosted 게시 | filename·root pubspec name/version·digest 일치 |
-| PB-H-02 | 두 clean `PUB_CACHE`에서 exact version `dart/flutter pub get` | archive digest·resolved version 일치 |
-| PB-H-03 | 설치된 plugin API를 사용하는 unit/smoke | local source 없이 성공 |
-| PB-P-01 | 실제 pub.dev 의존성 cold·warm | upstream·cold·warm digest 일치 |
-| PB-P-02 | exact Proxy package 삭제 후 재get | 재cold·재warm·retracted metadata 보존 |
-| PB-G-01 | Group만 설정한 앱 `flutter pub get` | Hosted plugin·Proxy dependency 동시 해석 |
-| PB-G-02 | 같은 격리 consumer의 Android release build | 원격 plugin을 포함한 artifact 생성 |
-| PB-G-03 | 같은 격리 consumer의 iOS no-sign/device build | 원격 plugin·native bridge link 성공 |
-| PB-S-01 | 격리 QA prerelease 정책 차단 | Group에서 `pub get` 실패·요청 차단 audit |
-
-Pub PASS는 `pub get`만 성공한 것이 아니라 PB-G-02·03의 실제 Flutter 앱 build까지 이어져야 한다. Pub은 Dart·Flutter 패키지 유통을 검증하고, Swift·CocoaPods·Conan은 하위 네이티브 패키지 경계를 각각 검증한다.
-
-## 13. Proxy 대상 선정 게이트
+## 12. Proxy 대상 선정 게이트
 
 각 포맷의 Proxy 좌표는 실행 전 dependency inventory에서 다음 기준으로 선정한다.
 
@@ -368,7 +330,7 @@ Pub PASS는 `pub get`만 성공한 것이 아니라 PB-G-02·03의 실제 Flutte
 
 실행 표의 Proxy coordinate는 첫 run 전까지 `TBD — Phase 0 dependency inventory`로 둔다. 기준을 통과한 좌표가 없으면 포맷 행 전체가 아니라 Proxy 조합만 사유가 있는 N/A로 기록한다.
 
-## 14. 정책·손상 제어 fixture
+## 13. 정책·손상 제어 fixture
 
 ### 정책 차단
 
@@ -387,7 +349,7 @@ Pub PASS는 `pub get`만 성공한 것이 아니라 PB-G-02·03의 실제 Flutte
 
 이 fixture는 UI preflight와 native/API 게시 모두에서 거부되어야 하며 package, version, manifest, servable blob reference를 남기면 안 된다. 정상 제품 archive를 손상한 복사본을 사용하되 정상 archive와 보관 경로를 분리한다.
 
-## 15. 캐시·삭제 계약
+## 14. 캐시·삭제 계약
 
 - client cache 삭제와 ChainShield Proxy artifact cache 삭제를 구분한다.
 - warm 검증은 cold client home/cache를 재사용하지 않고 다른 빈 client로 수행한다.
@@ -396,7 +358,7 @@ Pub PASS는 `pub get`만 성공한 것이 아니라 PB-G-02·03의 실제 Flutte
 - Group은 member 원본을 소유하지 않으므로 개별 삭제를 제공하지 않고 member·우선순위·provenance를 보존해야 한다.
 - 한 포맷 검증을 위해 전역 cache·다른 포맷·다른 저장소를 삭제하지 않는다.
 
-## 16. UI–native–audit 상관관계
+## 15. UI–native–audit 상관관계
 
 각 포맷·저장소 유형 결과는 다음 canonical subject로 연결한다.
 
@@ -415,7 +377,7 @@ selected_member_repository_id + member_order
 - browser request ID·native request ID·audit event ID는 각각 실제 event를 가리키되 같은 run subject에 연결
 - 스크린샷은 화면 상태 증거이며 digest·native build 증거를 대체하지 않음
 
-## 17. 증적 명세
+## 16. 증적 명세
 
 ### 디렉터리
 
@@ -491,7 +453,7 @@ ChainShield 증적 경로에 모바일 앱 개발 코드를 복사하지 않는�
 6. 예외가 적용되면 `허용 · 예외 적용` 요청 결과와 원래 `정책 위반` 판정
 7. 실제 앱 build·실행 성공 화면 또는 터미널 결과
 
-## 18. 실행 자동화 계약
+## 17. 실행 자동화 계약
 
 `qa/chainshield/run` 진입점은 포맷별로 다음 공통 인자를 받는다.
 
@@ -512,7 +474,7 @@ ChainShield 증적 경로에 모바일 앱 개발 코드를 복사하지 않는�
 - retry는 같은 run 결과를 덮어쓰지 않고 attempt ID를 늘린다.
 - `not_run`, `skipped`, timeout, cancel, stale commit, dirty source는 PASS로 승격하지 않는다.
 
-## 19. 결함 분류·등록
+## 18. 결함 분류·등록
 
 FAIL은 다음 순서로 분류한다.
 
@@ -526,7 +488,7 @@ FAIL은 다음 순서로 분류한다.
 
 결함 이슈에는 실패 상태 screenshot을 반드시 첨부하고, 닫기 전에 같은 조건의 개선 screenshot·재검증 run·관련 PR을 연결한다.
 
-## 20. 실행 중단 조건
+## 19. 실행 중단 조건
 
 다음은 즉시 실행을 중단하고 `BLOCKED` 또는 배포 무효 가능성을 공유한다.
 
@@ -538,7 +500,7 @@ FAIL은 다음 순서로 분류한다.
 - Group이 아닌 member endpoint를 우회해야만 build가 성공함
 - 실제 앱 dependency가 아닌 임의 패키지를 제품에 추가해야만 Proxy가 성립함
 
-## 21. 완료 조건
+## 20. 완료 조건
 
 포맷 행은 다음을 모두 만족해야 완료다.
 
@@ -553,9 +515,9 @@ FAIL은 다음 순서로 분류한다.
 9. FAIL은 근본원인 기준 이슈와 연결되었고 screenshot 증거가 있다.
 10. secret·개인정보·민감한 음성이 공개 증적에 없다.
 
-#1470 전체는 Conan·Swift·CocoaPods·Pub 네 행이 모두 위 조건을 만족하고, 파생 결함이 재검증되어야 완료다.
+#1470 전체는 Conan·Swift·CocoaPods 세 행이 모두 위 조건을 만족하고, 파생 결함이 재검증되어야 완료다.
 
-## 22. #1470 실행 댓글 템플릿
+## 21. #1470 실행 댓글 템플릿
 
 ```markdown
 ## <포맷> / Run <YYYYMMDD-NN>
@@ -579,14 +541,14 @@ FAIL은 다음 순서로 분류한다.
 - 비밀·개인정보 redaction 확인:
 ```
 
-## 23. 첫 실행 순서
+## 22. 첫 실행 순서
 
 1. `tonemate` 저장소와 포맷별 실제 모듈 경계를 생성한다.
 2. 루트·QA `AGENTS.md`, `DESIGN.md`, 승인 명세·초기 ADR을 작성하고 상호 연결한다.
 3. 툴체인·좌표·버전·lockfile·package manifest를 고정한다.
 4. 일반 원격을 사용한 제품 기준선과 격리 consumer를 완성한다.
-5. 배포 확인 후 Pub 단독 run으로 가장 빠른 Flutter 전체 경로를 검증한다.
-6. Conan·Swift·CocoaPods를 각각 단독 run으로 검증한다.
-7. Android, iOS SwiftPM, iOS CocoaPods 세 clean lane을 각각 해당 포맷 Group endpoint로 build하고 같은 product commit에 결속한다.
+5. `pitch_core`가 실제 제품에서 build 가능한 첫 clean commit부터 Conan 단독 run을 검증한다.
+6. `apple_audio`와 CocoaPods 호환 lane이 실제 build 가능해지는 순서대로 Swift·CocoaPods 단독 run을 검증한다.
+7. Android, iOS SwiftPM, iOS CocoaPods 세 clean lane을 적용 가능한 native 포맷 Group endpoint로 build하고 같은 product commit에 결속한다.
 8. #1464 일정에 맞춰 동시 native 요청 run을 수행한다.
 9. 포맷별 판정·증적·파생 결함을 #1470에 연결한다.

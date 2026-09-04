@@ -6,10 +6,10 @@
 
 | 문서 | 현재 개정 | 역할 | 상태 |
 |---|---:|---|---|
-| [제품 명세](product-spec-v1.md) | 1.3 | 사용자, MVP, 기능·안전·개인정보, 수용 기준 | 구현 전 기준선 |
-| [기술검증 계획](technical-validation-plan-v1.md) | 1.3 | 알고리즘·오디오·기기·성능 검증과 합격선 | 실행 전 |
-| [제품·QA 추적성](product-qa-traceability-v1.md) | 1.2 | 요구사항→모듈→시험→증적 연결 | 실행 전 |
-| [ChainShield #1470 E2E](chainshield-1470-e2e-spec-v1.md) | 1.2 | Conan·Swift·CocoaPods·Pub 공급망 실사용 검증 | 실행 전 |
+| [제품 명세](product-spec-v1.md) | 1.4 | 사용자, MVP, 기능·안전·개인정보, 수용 기준 | 구현 전 기준선 |
+| [기술검증 계획](technical-validation-plan-v1.md) | 1.4 | 알고리즘·오디오·기기·성능 검증과 합격선 | 실행 전 |
+| [제품·QA 추적성](product-qa-traceability-v1.md) | 1.3 | 요구사항→모듈→시험→증적 연결 | 실행 전 |
+| [ChainShield #1470 E2E](chainshield-1470-e2e-spec-v1.md) | 1.3 | Conan·Swift·CocoaPods 공급망 실사용 검증 | 실행 전 |
 
 ## Authority
 

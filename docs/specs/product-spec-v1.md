@@ -1,6 +1,6 @@
 # ToneMate 모바일 앱 제품 명세 v1
 
-- 문서 버전: 1.3
+- 문서 버전: 1.4
 - 작성일: 2026-09-02
 - ToneMate 정본 편입일: 2026-09-04
 - 상태: 기술검증·ChainShield #1470 병행 실행 명세
@@ -677,7 +677,7 @@ tonemate/
   apps/tonemate/                  실제 Flutter iOS·Android 앱
   packages/pitch_core/            공유 C++ 음정 분석 코어·Conan recipe
   packages/apple_audio/           AVAudioEngine 연결 Swift package
-  packages/tonemate_pitch/        앱이 소비하는 Flutter plugin·Pub package
+  packages/tonemate_pitch/        앱이 소비하는 내부 Flutter plugin·Dart package
   distribution/cocoapods/         같은 iOS 코드의 CocoaPods 호환 배포
   bench/                           DSP corpus·benchmark
   docs/specs/                      승인된 제품·기술·#1470 명세
@@ -692,7 +692,7 @@ tonemate/
 | `pitch_core` | `tonemate-pitch-core/0.1.0@tonemate/stable` | iOS·Android 공유 DSP | Conan Hosted·Group 소비 |
 | `apple_audio` | `tonemate.apple-audio@0.1.0` | iOS 오디오 세션·입력 | Swift Registry Hosted·Group 소비 |
 | `ToneMatePitch` | `ToneMatePitch@0.1.0` | SwiftPM 미사용 환경의 iOS 호환 배포 | CocoaPods Hosted·Group 소비 |
-| `tonemate_pitch` | `tonemate_pitch@0.1.0` | Flutter에 노출하는 제어·관측 API | Pub Hosted·Group에서 실제 앱 build |
+| `tonemate_pitch` | workspace package `tonemate_pitch` | Flutter에 노출하는 제어·관측 API | #1470 대상 아님; 실제 앱 내부 소비 |
 
 좌표와 첫 배포 버전은 저장소 생성 시 확정하되, 한 번 게시한 버전은 같은 바이트에만 결속한다. 배포 산출물은 모노레포의 같은 코드를 패키징하며 포맷별 구현을 복제하지 않는다.
 
@@ -700,7 +700,7 @@ tonemate/
 
 ### 패키지 관리 원칙
 
-- Dart·Flutter: `pubspec.lock` 필수. 앱의 정식 manifest는 `tonemate_pitch` 버전 범위를 선언하고, 일반 개발에서만 workspace가 로컬 패키지를 해석할 수 있다.
+- Dart·Flutter: `pubspec.lock` 필수. 앱 manifest는 `tonemate_pitch`를 workspace package로 해석한다. Pub Hosted·Proxy·Group 검증은 현재 #1470 범위가 아니다.
 - iOS 네이티브 의존성: `Package.resolved`를 갖는 SwiftPM을 주 경로로 사용한다.
 - CocoaPods: `Podfile.lock`을 갖는 지원 대상 호환 경로로 유지하고, 같은 고정 commit의 iOS 산출물을 사용한다.
 - Android: Gradle version catalog·dependency locking, NDK 버전 고정
@@ -801,7 +801,7 @@ ChainShield #1470 판정은 이 제품 출시 게이트와 증적을 공유하�
 
 ### 이 명세에서 결정
 
-- 제품명은 상표 조사 전까지 `ToneMate`을 작업명으로 사용한다.
+- 제품명은 상표 조사 전까지 `ToneMate`를 작업명으로 사용한다.
 - iOS·Android를 제품 목표로 하고 같은 핵심 흐름을 제공한다.
 - Flutter 셸과 플랫폼 네이티브 오디오 입력을 사용한다.
 - 온디바이스·무계정·원음 비저장을 기본값으로 한다.
@@ -809,7 +809,7 @@ ChainShield #1470 판정은 이 제품 출시 게이트와 증적을 공유하�
 - C 메이저 도수 체계를 중심에 두되 안전을 위해 전조를 허용한다.
 - 상용곡과 AI 발성 진단은 MVP에서 제외한다.
 - 제품은 독립 `tonemate` 모노레포에서 개발하고 #1470은 고정 commit의 소비·증적만 관리한다.
-- Pub은 `tonemate_pitch` 실제 Flutter plugin 배포·소비 경로이므로 #1470 범위에 포함한다.
+- `tonemate_pitch`는 실제 앱이 소비하는 내부 Flutter plugin으로 유지한다. Dart/Pub 도구는 제품 build에 사용하지만 Pub Hosted·Proxy·Group은 #1470 범위에 포함하지 않는다.
 - SwiftPM을 주 경로, CocoaPods를 지원하는 호환 경로로 유지하되 같은 iOS 소스와 제품 commit을 사용한다.
 
 ### 기술검증에서 결정

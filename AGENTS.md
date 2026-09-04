@@ -8,7 +8,7 @@
 
 - ToneMate는 실제 iOS·Android 음정 감각·발성 훈련 제품이다.
 - 사용자가 음정을 못 맞히는 원인을 듣기, 목표음 진입, 유지, 이동과 타이밍으로 나누고 개인 음역에 맞는 훈련과 무피드백 재검사를 제공한다.
-- ChainShield #1470은 실제 제품 개발에서 만들어지는 Conan·Swift·CocoaPods·Pub 패키지를 검증하는 병행 QA다. 테스트를 위해 제품에 필요 없는 기능이나 의존성을 넣지 않는다.
+- ChainShield #1470은 실제 제품 개발에서 만들어지는 Conan·Swift·CocoaPods 패키지를 검증하는 병행 QA다. 테스트를 위해 제품에 필요 없는 기능이나 의존성을 넣지 않는다.
 - ChainShield 소스를 이 저장소에 복사하지 않고 ToneMate 코드를 ChainShield 저장소에 섞지 않는다.
 
 ## Source of truth
@@ -20,7 +20,8 @@
 3. `DESIGN.md`: 현재 구현의 모듈·데이터·스레드·빌드 경계
 4. `docs/specs/product-qa-traceability-v1.md`: 요구사항과 구현·시험·증적의 연결
 5. `docs/specs/chainshield-1470-e2e-spec-v1.md`: 고정 commit을 소비하는 공급망 검증 계약
-6. `docs/adr/`: 채택하거나 기각한 주요 설계 선택
+6. `docs/plans/development-workflow.md`: 제품 개발, #1470 실행과 결함 수정의 이슈 운영 절차
+7. `docs/adr/`: 채택하거나 기각한 주요 설계 선택
 
 연구 문서는 결정 근거이며 정본 요구사항이 아니다. 문서끼리 충돌하면 조용히 한쪽을 선택하지 말고 역할에 따라 분류한 뒤 관련 정본과 추적성 문서를 함께 갱신한다.
 
@@ -32,6 +33,7 @@
 - 공유 DSP를 채택하면 `pitch_core` C ABI와 Dart FFI를 안정 경계로 사용한다.
 - 의존 방향은 앱 → Flutter plugin → 플랫폼 오디오 → `pitch_core`로 유지한다.
 - SwiftPM과 CocoaPods는 같은 iOS target에 동시에 링크하지 않는다. 별도의 clean build lane으로 검증한다.
+- Flutter/Dart의 `pubspec`과 workspace package는 제품 build 도구다. Pub Hosted·Proxy·Group은 현재 #1470 범위가 아니며 그 결과를 #1470 PASS로 기록하지 않는다.
 - 서버는 MVP 핵심 경로의 필수 조건이 아니다. 오프라인 첫 진단과 훈련을 유지한다.
 
 ## Real-time audio safety
@@ -56,7 +58,7 @@ callback은 사전 할당된 buffer에 bounded write만 수행한다. 분석과 
 ## Dependency and build discipline
 
 - Flutter·Dart, Xcode·Swift, Android Gradle·Kotlin·NDK·CMake와 Conan 버전을 고정한다.
-- `pubspec.lock`, `Package.resolved`, `Podfile.lock`, Gradle dependency lock과 `conan.lock`을 해당 lane이 생기는 시점부터 버전 관리한다.
+- 제품의 `pubspec.lock`, `Package.resolved`, `Podfile.lock`, Gradle dependency lock과 `conan.lock`을 해당 lane이 생기는 시점부터 버전 관리한다.
 - 공개한 패키지 버전은 같은 byte와 digest에만 결속한다. 내용이 달라지면 새 버전을 발행한다.
 - 패키지 포맷 테스트만을 위한 불필요한 제품 의존성은 추가하지 않는다.
 - 변경 범위의 focused test와 build를 기본으로 실행한다. 전체 기기·통합 matrix는 명세에 정의된 phase/release gate에서 수행한다.

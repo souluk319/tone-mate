@@ -1,6 +1,6 @@
 # ToneMate 제품·기술·ChainShield #1470 추적성 명세 v1
 
-- 문서 버전: 1.2
+- 문서 버전: 1.3
 - 작성일: 2026-09-02
 - ToneMate 정본 편입일: 2026-09-04
 - 상태: 실행 전 기준선
@@ -58,28 +58,28 @@
 | `pitch_core` | iOS·Android 공유 F0·VAD·segment 산식 | Conan | native host·CMake smoke | TV-003–012, 016, 023 | CN-H/P/G/S |
 | `apple_audio` | iOS route·interruption·PCM 수집 | Swift Registry | iOS app SwiftPM lane | TV-001–02, 010, 013, 021 | SW-H/P/G/S |
 | `ToneMatePitch` | SwiftPM 미사용 iOS 호환 경로 | CocoaPods | iOS app `.xcworkspace` lane | TV-021, 023–024 | CP-H/P/G/S |
-| `tonemate_pitch` | Flutter–native 제어·관측 API | Pub | `apps/tonemate` | TV-009–013, 016, 021–022, 027 | PB-H/P/G/S |
-| `apps/tonemate` | 실제 음정 테스트·훈련 UX | Pub + lane별 native packages | 최종 앱 | AC-01–07, TV-021–030 | Android / iOS SwiftPM / iOS CocoaPods 별도 Group build |
+| `tonemate_pitch` | Flutter–native 제어·관측 API | 내부 Dart workspace package | `apps/tonemate` | TV-009–013, 016, 021–022, 027 | #1470 대상 아님 |
+| `apps/tonemate` | 실제 음정 테스트·훈련 UX | workspace + lane별 native packages | 최종 앱 | AC-01–07, TV-021–030 | Conan / Swift / CocoaPods 실제 consumer build |
 
 ## 4. 제품 요구사항–기술–공급망 추적표
 
 | 제품 요구사항 | 주 구현 경계 | 제품 검증 | ChainShield 연결 | 증적 완료 조건 |
 |---|---|---|---|---|
-| ONB-01 오프라인 첫 진단 | Flutter app·로컬 assets | TV-030 | Pub Group의 clean app build | 원격 plugin 포함 build + airplane mode AC-01 |
+| ONB-01 오프라인 첫 진단 | Flutter app·로컬 assets | TV-030 | #1470 직접 연결 없음 | product clean build + airplane mode AC-01 |
 | ENV-01 실제 input format | `apple_audio`·Android host | TV-002 | Swift/CocoaPods Hosted·Group | 원격 package를 link한 실기기 route run |
 | ENV-04 route/interruption | `apple_audio`·Android host | TV-013 | Swift/CocoaPods Group | 실제 app AC-04 + package provenance |
 | PRD-01–06 음정 산출 | `pitch_core` | TV-003–008, 026 | Conan Hosted·Group | exact revision 소비 + corpus gate |
-| TRN-03 실시간 피치 | `pitch_core`→`tonemate_pitch`→Flutter | TV-009–012 | Conan + Pub Group | p95 latency + Android/iOS build |
-| TRN-04–06 feedback fading | Flutter session state | TV-027 | Pub Group | 원격 plugin consumer의 AC-03 |
-| TRN-07 retention | Flutter·local DB | product E2E | Pub Group | clean app build에서 retention state 재현 |
+| TRN-03 실시간 피치 | `pitch_core`→`tonemate_pitch`→Flutter | TV-009–012 | Conan Group + 실제 app build | p95 latency + Android/iOS build |
+| TRN-04–06 feedback fading | Flutter session state | TV-027 | 공급망 보조 | clean product build의 AC-03 |
+| TRN-07 retention | Flutter·local DB | product E2E | #1470 직접 연결 없음 | clean product build에서 retention state 재현 |
 | DAT-01–03 데이터 | Flutter·platform storage | TV-017–019 | 공급망 보조 | 원격 빌드에서 파일·삭제 검사 |
 | PRV-01–08 개인정보 | 전 앱·plugin | TV-017–020, 030 | 공급망 보조 | 원격 빌드의 packet·filesystem 검사 |
-| NFR-03 입력→UI 지연 | 전 native–Flutter 경로 | TV-009–012 | Conan·Swift·Pub Group | 원격 package build와 latency run 같은 SHA |
+| NFR-03 입력→UI 지연 | 전 native–Flutter 경로 | TV-009–012 | Conan·Swift와 적용 가능한 CocoaPods Group | 원격 native package build와 latency run 같은 SHA |
 | NFR-08 결정성 | `pitch_core` | TV-016 | Conan exact revision | 같은 PCM·package digest 100회 replay |
-| NFR-11 의존성 inventory | 전 패키지 | TV-024 | 네 포맷 H/P/G | lockfile·SBOM·manifest·digest 일치 |
-| NFR-12 공급망 재현성 | 전 패키지·app | AC-07 | CN/SW/CP/PB Group | local bypass 0 + clean Android·iOS build |
-| AC-04 오디오 경로 변경 | Swift/CocoaPods native + Flutter | TV-013 | SW-G-02, CP-H-03, PB-G-03 | 같은 app SHA의 두 iOS 배포 lane |
-| AC-07 clean package build | 전 모듈 | Phase 0 reproducibility | #1470 네 포맷 필수 | source·coordinate·digest·build 상관관계 |
+| NFR-11 의존성 inventory | 전 패키지 | TV-024 | 세 포맷 H/P/G | lockfile·SBOM·manifest·digest 일치 |
+| NFR-12 공급망 재현성 | 전 패키지·app | AC-07 | CN/SW/CP Group | local bypass 0 + clean Android·iOS build |
+| AC-04 오디오 경로 변경 | Swift/CocoaPods native + Flutter | TV-013 | SW-G-02, CP-H-03 | 같은 app SHA의 두 iOS 배포 lane |
+| AC-07 clean package build | 전 모듈 | Phase 0 reproducibility | #1470 세 포맷 필수 | source·coordinate·digest·build 상관관계 |
 
 공급망 검증이 `보조`인 항목은 ChainShield PASS만으로 제품 기능 PASS를 주장할 수 없다. 반대로 제품 기능 PASS는 패키지 저장소 계약의 PASS를 주장할 수 없다.
 
@@ -90,7 +90,6 @@
 | CN-H/P/G/S | Conan | recipe·binary revision·CMake/app link | incomplete graph·digest·정책 차단 |
 | SW-H/P/G/S | Swift | registry publish/resolve/build·iOS link | archive/identity·selected-release 차단 |
 | CP-H/P/G/S | CocoaPods | CDN metadata·pod install·workspace build | podspec/source 불일치·정책 차단 |
-| PB-H/P/G/S | Pub | package get·Flutter Android/iOS build | archive/pubspec 불일치·정책 차단 |
 
 ## 6. 저장소 유형별 추적표
 
@@ -111,7 +110,6 @@
 | Conan | `TBD` | `conan.lock` | `SPECIFIED` | Phase 0 inventory 후 확정 |
 | Swift | `TBD` | `Package.resolved` | `SPECIFIED` | Phase 0 inventory 후 확정 |
 | CocoaPods | `TBD` | `Podfile.lock` | `SPECIFIED` | Phase 0 inventory 후 확정 |
-| Pub | `TBD` | `pubspec.lock` | `SPECIFIED` | Phase 0 inventory 후 확정 |
 
 확정 규칙:
 
@@ -136,9 +134,9 @@
 
 | 변경 | 갱신할 문서·검증 |
 |---|---|
-| 제품 패키지 경계·좌표 | 제품 §18, 기술 §5·19, #1470 §4, 본 문서 §3–07 |
+| 제품 패키지 경계·좌표 | 제품 §18, 기술 §5·19, #1470 §4, 본 문서 §3–7 |
 | 외부 의존성 추가·제거 | lockfile, SBOM, Proxy 적용성 표, P/G 시나리오 |
-| Flutter·Dart 버전 | 툴체인 manifest, Pub client 증적, Android·iOS build |
+| Flutter·Dart 버전 | 툴체인 manifest와 Android·iOS 제품 build; #1470 Pub 증적 없음 |
 | SwiftPM⇄CocoaPods 지원 범위 | 제품 지원 정책, SW/CP 시나리오, #1470 N/A 영향 |
 | DSP 공유 C++ 제거 | Conan 적용성과 CN 시나리오 전체 재판정 |
 | 정책·scan profile | 제어 fixture, 기대 판정, 예외 수명주기 |
@@ -164,12 +162,11 @@
 
 | 범위 | 상태 | 근거 | 다음 게이트 |
 |---|---|---|---|
-| 제품 기능 명세 | `SPECIFIED` | 제품 명세 v1.3 | 모노레포 구현 |
-| 음정 기술 검증 | `SPECIFIED` | 기술검증 계획 v1.3 | Phase 0–3 실행 |
+| 제품 기능 명세 | `SPECIFIED` | 제품 명세 v1.4 | 모노레포 구현 |
+| 음정 기술 검증 | `SPECIFIED` | 기술검증 계획 v1.4 | Phase 0–3 실행 |
 | Conan #1470 | `SPECIFIED` | CN-H/P/G/S | 제품 package·consumer 구현 |
 | Swift #1470 | `SPECIFIED` | SW-H/P/G/S | 제품 package·consumer 구현 |
 | CocoaPods #1470 | `SPECIFIED` | CP-H/P/G/S | 호환 lane 구현·지원 확정 |
-| Pub #1470 | `SPECIFIED` | PB-H/P/G/S | 실제 Flutter plugin·격리 app build |
 | #1470 실행 | `NOT RUN` | 2026-09-03 배포 후 시작 | 배포 preflight·고정 product SHA |
 
 ## 12. 첫 구현 백로그 연결
@@ -179,11 +176,11 @@
 | 1 | 루트 `AGENTS.md`·`DESIGN.md`·QA `AGENTS.md`·`docs/specs`·초기 ADR | 문서–구조 일치 리뷰 | clean SHA·격리·증적 규칙 확정 |
 | 2 | 모노레포·툴체인·manifest schema | clean hello builds | run schema·consumer isolation check |
 | 3 | `pitch_core` C++ baseline | corpus·determinism·ABI | Conan Hosted·Group |
-| 4 | `tonemate_pitch` Flutter plugin | Dart API·FFI·widget smoke | Pub Hosted·Group + Android build |
+| 4 | `tonemate_pitch` Flutter plugin | Dart API·FFI·widget smoke | 제품 전용; #1470 직접 실행 없음 |
 | 5 | `apple_audio` Swift package | route·interruption·iOS compile | Swift Hosted·Group + iOS build |
 | 6 | CocoaPods compatibility archive | Pod lint·workspace compile | CocoaPods Hosted·Group |
 | 7 | 실제 외부 dependency 고정 | lock·license·SBOM | 적용 가능한 Proxy cold·warm·purge |
 | 8 | 정책 제어 fixture | 정식 graph 미포함 확인 | 차단·재스캔·예외 |
-| 9 | 고정 product RC commit | AC-01–07·TV gates | 네 포맷 단독·동시 run |
+| 9 | 고정 product RC commit | AC-01–07·TV gates | 세 포맷 단독·동시 run |
 
-이 순서는 제품 완성 후에만 #1470을 시작하는 방식이 아니다. 각 package·consumer가 실제 build 가능해지면 그 commit을 고정해 포맷 단독 기준선을 바로 축적한다. 최종 RC에서 네 포맷을 한 commit으로 다시 결속한다.
+이 순서는 제품 완성 후에만 #1470을 시작하는 방식이 아니다. 각 package·consumer가 실제 build 가능해지면 그 commit을 고정해 포맷 단독 기준선을 바로 축적한다. 최종 RC에서 Conan·Swift·CocoaPods를 한 commit으로 다시 결속한다.

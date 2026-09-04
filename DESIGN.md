@@ -22,7 +22,7 @@ MVP는 계정과 서버 없이 첫 진단과 일일 훈련을 완료할 수 있�
 apps/tonemate/                 Flutter UI·세션·로컬 데이터
 packages/pitch_core/           C++20 DSP·C ABI·Conan recipe
 packages/apple_audio/          AVAudioEngine 연결 Swift package
-packages/tonemate_pitch/       Flutter plugin·Pub package
+packages/tonemate_pitch/       앱 내부 Flutter plugin·Dart package
 distribution/cocoapods/        동일 iOS 소스의 CocoaPods 배포
 bench/                         결정론적 corpus·benchmark
 qa/chainshield/                #1470 실행·증적 하네스
@@ -88,9 +88,9 @@ tonemate_pitch Flutter plugin
 
 | Lane | 실제 제품 경로 | ChainShield #1470 형식 |
 |---|---|---|
-| Android | Flutter app + `tonemate_pitch` + `pitch_core` | Pub + Conan |
-| iOS SwiftPM | Flutter app + `tonemate_pitch` + `apple_audio` + `pitch_core` | Pub + Swift + 적용 가능한 Conan |
-| iOS CocoaPods | Flutter app + `tonemate_pitch` + `ToneMatePitch` + `pitch_core` | Pub + CocoaPods + 적용 가능한 Conan |
+| Android | Flutter app + `tonemate_pitch` + `pitch_core` | 적용 가능한 Conan |
+| iOS SwiftPM | Flutter app + `tonemate_pitch` + `apple_audio` + `pitch_core` | Swift + 적용 가능한 Conan |
+| iOS CocoaPods | Flutter app + `tonemate_pitch` + `ToneMatePitch` + `pitch_core` | CocoaPods + 적용 가능한 Conan |
 
 SwiftPM과 CocoaPods lane은 같은 기능 소스와 product commit을 사용하지만 같은 target에 동시에 링크하지 않는다. 모든 정식 패키지는 lockfile, coordinate, version, source commit과 artifact digest를 기록한다.
 
@@ -100,13 +100,15 @@ SwiftPM과 CocoaPods lane은 같은 기능 소스와 product commit을 사용하
 
 ChainShield는 제품 런타임 기능이 아니다. `qa/chainshield`가 다음을 외부 관점에서 검증한다.
 
-- Conan, Swift, CocoaPods, Pub Hosted 게시와 native 소비
+- Conan, Swift, CocoaPods Hosted 게시와 native 소비
 - Proxy cold·warm·exact purge·재수집
 - Hosted-first, Proxy-second Group의 실제 선택 member와 provenance
 - Scan·Policy·재스캔·예외·감사·digest의 native 결과 상관관계
 - 격리된 consumer의 실제 Android·iOS build
 
 각 실행은 clean하고 push된 ToneMate full SHA와 ChainShield 배포 full SHA를 동시에 기록한다. 로컬 workspace 우회는 제품 개발에는 사용할 수 있지만 #1470 증적에는 사용할 수 없다.
+
+Flutter/Dart의 Pub 도구와 `tonemate_pitch` workspace package는 제품 내부 build 경로로 유지한다. Pub 저장소의 Hosted·Proxy·Group은 현재 #1470 범위가 아니므로 해당 경로를 위한 원격 게시·격리 consumer 증적을 만들지 않는다.
 
 ## 9. Data and privacy boundary
 
