@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "ToneMateRegistryConnection",
+    platforms: [.macOS(.v13)],
     dependencies: [.package(id: "tonemate.apple-audio", exact: "0.1.0-alpha.1")],
     targets: [.executableTarget(
         name: "ToneMateRegistryConnection",
