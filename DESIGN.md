@@ -21,6 +21,10 @@ MVP는 계정과 서버 없이 첫 진단과 일일 훈련을 완료할 수 있�
 CocoaPods prerelease 구성이 구현되어 있다. 실제 F0 추정, PCM capture와 앱은
 아직 `Planned`다.
 
+`scripts/connect-chainshield.mjs`와 `qa/chainshield/consumers`는 게시된 내부
+패키지를 네이티브 클라이언트로 받아 사용하는 연결 확인을 제공한다.
+독립 임시 consumer를 사용하며 실제 앱 build lane은 아직 `Planned`다.
+
 ```text
 apps/tonemate/                 Flutter UI·세션·로컬 데이터
 packages/pitch_core/           C++20 DSP 기반·C ABI·Conan recipe (부분 구현)

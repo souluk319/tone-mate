@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.24)
+project(ToneMateRegistryConnection LANGUAGES CXX)
+find_package(ToneMatePitchCore CONFIG REQUIRED)
+add_executable(tonemate_registry_connection main.cpp)
+target_link_libraries(tonemate_registry_connection PRIVATE ToneMate::PitchCore)

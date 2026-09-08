@@ -1,0 +1,7 @@
+source 'https://chainshield.cywell.co.kr/cocoapods/tm1470-cocoapods-group'
+platform :ios, '15.0'
+install! 'cocoapods', :integrate_targets => false
+target 'ToneMateRegistryConnection' do
+  use_frameworks!
+  pod 'ToneMatePitch', '= 0.1.0-alpha.1'
+end

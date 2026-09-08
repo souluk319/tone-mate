@@ -1,0 +1,6 @@
+[requires]
+tonemate-pitch-core/0.1.0-alpha.1@tonemate/stable#a6cbe718a42ceb363d741359e8ebf887
+
+[generators]
+CMakeDeps
+CMakeToolchain
