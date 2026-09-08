@@ -34,3 +34,27 @@ resolve해 모듈을 실행하며, CocoaPods는 설치 후 iOS Simulator용 pod�
 비교하고, 기존 OPEN/CLOSED 이슈 검색 후 확인된 ChainShield 결함을 별도 이슈로
 등록한다. 요청 ID와 native 로그를 남기며 인증 실패·정책 차단을 서버 결함으로
 단정하지 않는다.
+
+## 2026-09-08 연결 결과
+
+Production `1.0.1`, 배포 SHA `7d97c3239d9b7fa99b1e069fe6df06c7839643c1`,
+시스템 화면 schema `192 (192..192)`에서 확인했다. 9개 저장소는 active이며
+세 Hosted에 alpha.1 패키지가 게시되어 있다.
+
+| 경로 | 결과 |
+|---|---|
+| Conan Group | 인증, recipe/binary 다운로드, C++ 링크·A4=440 Hz 실행 성공 |
+| CocoaPods Group | `pod install` 및 iOS Simulator pod build 성공 |
+| Swift Hosted | `--netrc` 적용 후 resolve, 다운로드, module import·실행 성공 |
+| Swift Group | 인증 후 `Package.swift`에서 502; 연결 미완료 |
+
+- [#1734](https://github.com/cywell-rnd-team/chainshield/issues/1734): macOS Swift
+  Private 안내에 `--netrc` 누락. 현재 연결 스크립트에는 옵션을 반영했다.
+- [#1735](https://github.com/cywell-rnd-team/chainshield/issues/1735): Swift Proxy의
+  upstream 404가 502로 바뀌어 뒤 Hosted로 진행하지 못함.
+- Swift Group은 현재 Proxy 1순위, Hosted 2순위다. 두 continue 옵션 모두 true인
+  상태에서 재현했으며 서버 설정은 변경하지 않았다.
+- Swift 개발 준비는 `swift hosted` 명령으로 확인 가능하다. Group 재검증은
+  #1735 수정 배포 후 동일 설정과 좌표로 수행한다.
+- 이 결과는 초기 내부 패키지 연결 확인이다. Flutter 앱과 실제 오디오 capture는
+  아직 없으며, 다음 제품 작업은 #1의 Flutter 앱 골격 및 Android/iOS hello build다.

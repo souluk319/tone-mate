@@ -1,0 +1,14 @@
+{
+  "originHash" : "b045aa200982eb14d132aa9e1d6b481af18843b0dac9d4b1fcfeea9cdd3d5f3b",
+  "pins" : [
+    {
+      "identity" : "tonemate.apple-audio",
+      "kind" : "registry",
+      "location" : "",
+      "state" : {
+        "version" : "0.1.0-alpha.1"
+      }
+    }
+  ],
+  "version" : 3
+}

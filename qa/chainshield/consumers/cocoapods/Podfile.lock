@@ -1,0 +1,16 @@
+PODS:
+  - ToneMatePitch (0.1.0-alpha.1)
+
+DEPENDENCIES:
+  - ToneMatePitch (= 0.1.0-alpha.1)
+
+SPEC REPOS:
+  https://chainshield.cywell.co.kr/cocoapods/tm1470-cocoapods-group/:
+    - ToneMatePitch
+
+SPEC CHECKSUMS:
+  ToneMatePitch: fedcfd0b7264fe265578444d91ec995684c5498e
+
+PODFILE CHECKSUM: ac69c1a380320b5cf662dc559b6c9af469b73ace
+
+COCOAPODS: 1.16.2

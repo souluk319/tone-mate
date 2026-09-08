@@ -1,0 +1,9 @@
+{
+    "version": "0.5",
+    "requires": [
+        "tonemate-pitch-core/0.1.0-alpha.1@tonemate/stable#a6cbe718a42ceb363d741359e8ebf887%1788509478.56227"
+    ],
+    "build_requires": [],
+    "python_requires": [],
+    "config_requires": []
+}
