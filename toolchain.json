@@ -1,0 +1,37 @@
+{
+  "flutter": {
+    "version": "3.47.2",
+    "revision": "d3b14c876900e553bc736ca19295fc09e3853e8e",
+    "dart": "3.13.2"
+  },
+  "apple": {
+    "xcode": "16.2",
+    "xcode_build": "16C5032a",
+    "swift": "6.0.3",
+    "ios_sdk": "18.2",
+    "simulator_runtime": "18.3",
+    "minimum_ios": "16.0",
+    "cocoapods": "1.16.2"
+  },
+  "android": {
+    "jdk": "21.0.10",
+    "command_line_tools": "23.0 (16111833)",
+    "platform_tools": "37.0.1",
+    "compile_sdk": 36,
+    "target_sdk": 36,
+    "minimum_sdk": 29,
+    "build_tools": "36.0.0",
+    "ndk": "28.2.13676358",
+    "cmake": "4.4.2",
+    "gradle": "9.3.1",
+    "android_gradle_plugin": "9.1.0",
+    "kotlin_gradle_plugin": "2.4.0"
+  },
+  "native": {
+    "cmake": "4.4.2",
+    "ninja": "1.13.2",
+    "conan": "2.31.1",
+    "compiler": "AppleClang 16.0.0.16000026",
+    "cpp_standard": 20
+  }
+}

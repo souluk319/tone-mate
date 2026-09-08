@@ -18,8 +18,9 @@ MVP는 계정과 서버 없이 첫 진단과 일일 훈련을 완료할 수 있�
 
 현재 저장소에는 정본 명세와 함께 `pitch_core`의 C ABI·음정 단위 변환 기반,
 `apple_audio`의 callback 외부 구성·타이밍 계약, 같은 Swift source를 배포하는
-CocoaPods prerelease 구성이 구현되어 있다. 실제 F0 추정, PCM capture와 앱은
-아직 `Planned`다.
+CocoaPods prerelease 구성이 구현되어 있다. `apps/tonemate`에는 Flutter workspace의
+시작·안전 안내 화면과 Android/iOS 기본 host가 있다. 실제 F0 추정, PCM capture,
+native package의 앱 연결과 진단·훈련 흐름은 아직 `Planned`다.
 
 `scripts/connect-chainshield.mjs`와 `qa/chainshield/consumers`는 게시된 내부
 패키지를 네이티브 클라이언트로 받아 사용하는 연결 확인을 제공한다.
