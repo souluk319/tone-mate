@@ -87,7 +87,7 @@ callback은 사전 할당된 buffer에 bounded write만 수행한다. 분석과 
 
 - 사용자가 만든 변경을 보존하고 관련 없는 파일을 수정하지 않는다.
 - 파괴적인 Git 명령과 광범위한 삭제를 사용하지 않는다.
-- 기준 checkout은 비교·fetch 기준으로 보존하고 실제 변경은 이슈 번호를 확보한 뒤 `.worktrees/issue_<번호>`에서 수행한다.
+- ToneMate는 기본 checkout의 `main`에서 직접 개발한다. 사용자 요청 없이 제품 작업용 branch·worktree를 나누지 않는다. 이 규칙은 기존 작업 계획의 ToneMate worktree 절차보다 우선하며, ChainShield의 별도 이슈·branch·PR 절차는 유지한다.
 - `ChainShield#1470`은 실행·증적 이슈이므로 해당 번호의 branch·worktree를 만들지 않는다. 확인된 제품 결함의 별도 이슈 번호를 사용한다.
 - multi-root workspace에 여러 저장소가 열려 있어도 한 agent는 한 worktree만 쓰며 시작 전에 cwd·Git top-level·branch를 확인한다.
 - 생성 산출물, cache, secret과 개인 음성은 커밋하지 않는다.
