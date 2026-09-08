@@ -19,7 +19,8 @@ MVP는 계정과 서버 없이 첫 진단과 일일 훈련을 완료할 수 있�
 현재 저장소에는 정본 명세와 함께 `pitch_core`의 C ABI·음정 단위 변환 기반,
 `apple_audio`의 callback 외부 구성·타이밍 계약, 같은 Swift source를 배포하는
 CocoaPods prerelease 구성이 구현되어 있다. `apps/tonemate`에는 Flutter workspace의
-시작·안전 안내 화면과 Android/iOS 기본 host가 있다. 실제 F0 추정, PCM capture,
+시작·안전 안내 화면과 Android/iOS 기본 host가 있다. `pitch_core`에는 합성 단음용
+YIN F0 기준선이 구현되어 있다. 실제 음성 검증, PCM capture,
 native package의 앱 연결과 진단·훈련 흐름은 아직 `Planned`다.
 
 `scripts/connect-chainshield.mjs`와 `qa/chainshield/consumers`는 게시된 내부
@@ -91,6 +92,11 @@ tonemate_pitch Flutter plugin
 - UI 갱신은 기본 20Hz bounded snapshot을 기준 후보로 하며 실제 frame/hop과 함께 검증한다.
 - route 변경, interruption과 background 전환 시 현재 trial을 무효화하고 새 환경 검사 없이는 이어 붙이지 않는다.
 - 모델·corpus·파일 I/O는 audio callback 밖에서 수행한다.
+
+현재 YIN C ABI는 44.1/48kHz mono 4096-sample frame을 worker에서 처리한다.
+detector 생성·해제 시 메모리를 소유하며 process는 추가 할당이나 PCM 보존 없이
+동작한다. detector 하나에 호출자 하나만 허용한다. 출력 periodicity는 VAD나
+보정된 confidence가 아니다. 앱 연결·streaming hop·최종 추정기 선택은 아직 미정이다.
 
 ## 7. Build and package lanes
 

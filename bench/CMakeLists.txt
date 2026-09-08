@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.24)
+project(tonemate_pitch_bench LANGUAGES CXX)
+include(CTest)
+add_subdirectory(../packages/pitch_core pitch_core)
+add_executable(pitch_baseline pitch_baseline.cpp)
+target_link_libraries(pitch_baseline PRIVATE ToneMate::PitchCore)
+add_test(NAME pitch_baseline COMMAND pitch_baseline)
