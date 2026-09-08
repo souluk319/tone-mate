@@ -79,7 +79,9 @@ try {
       command('swift', ['--version']);
       command('swift', ['package-registry', '--config-path', config, 'set', '--global', endpoint]);
       save(join(config, 'registries.json'), { authentication: { 'chainshield.cywell.co.kr': { type: 'basic' } }, registries: { '[default]': { supportsAvailability: false, url: endpoint } }, version: 1 });
-      const options = ['--package-path', consumer, '--config-path', config, '--cache-path', join(run, 'swift-cache'), '--security-path', join(run, 'swift-security'), '--netrc-file', netrc, '--disable-keychain'];
+      // SwiftPM registry authentication on macOS requires --netrc to choose
+      // this credential provider; --disable-keychain alone only affects SCM.
+      const options = ['--package-path', consumer, '--config-path', config, '--cache-path', join(run, 'swift-cache'), '--security-path', join(run, 'swift-security'), '--netrc', '--netrc-file', netrc, '--disable-keychain'];
       command('swift', ['package', ...options, 'resolve']);
       command('swift', ['run', ...options, 'ToneMateRegistryConnection']);
       summary.resolved = JSON.parse(readFileSync(join(consumer, 'Package.resolved'), 'utf8'));
